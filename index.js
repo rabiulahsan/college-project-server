@@ -28,7 +28,13 @@ async function run() {
 
 
     //database collection
-    
+    const collegeCollection = client.db("college-feature").collection("colleges");
+
+    //get colleges
+    app.get('/colleges', async(req, res)=>{
+        const result = await collegeCollection.find().toArray();
+        res.send(result);
+    })
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
