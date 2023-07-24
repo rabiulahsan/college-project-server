@@ -29,6 +29,13 @@ async function run() {
 
     //database collection
     const collegeCollection = client.db("college-feature").collection("colleges");
+    const researchCollection = client.db("college-feature").collection("researches");
+
+    //get researches
+    app.get('/researches', async(req, res)=>{
+        const result = await researchCollection.find().toArray();
+        res.send(result);
+    })
 
     //get colleges
     app.get('/colleges', async(req, res)=>{
@@ -38,7 +45,7 @@ async function run() {
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+    console.log(" You successfully connected to MongoDB!");
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
