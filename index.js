@@ -33,13 +33,13 @@ async function run() {
     const reviewCollection = client.db("college-feature").collection("reviews");
     const usersCollection = client.db("college-feature").collection("users");
 
-    //get colleges
+    //get users
     app.get("/users", async (req, res) => {
       const result = await usersCollection.find().toArray();
       res.send(result);
     });
 
-    // post a users
+    // post users
     app.post("/users", async (req, res) => {
       const user = req.body;
       const query = { email: user.email };
@@ -58,7 +58,7 @@ async function run() {
       const id = req.params.id;
       const userDetails = req.body;
 
-      console.log(id, user);
+      console.log(id);
 
       const filter = { _id: new ObjectId(id) };
       const options = { upsert: true };
@@ -92,6 +92,26 @@ async function run() {
     app.get("/reviews", async (req, res) => {
       const result = await reviewCollection.find().toArray();
       res.send(result);
+    });
+
+    //get search results
+    //getting search data
+    app.get("/search", async (req, res) => {
+      const searchValue = req.query.value;
+      console.log(searchValue);
+
+      if (!searchValue) {
+        return res.status(400).json({ error: "Search value is required" });
+      }
+
+      // Perform the search logic on your data
+      const searchResults = await collegeCollection
+        .find({
+          name: { $regex: new RegExp(searchValue, "i") },
+        })
+        .toArray();
+
+      res.send(searchResults);
     });
 
     // Send a ping to confirm a successful connection
