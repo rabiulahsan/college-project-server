@@ -33,6 +33,20 @@ async function run() {
     const reviewCollection = client.db("college-feature").collection("reviews");
     const usersCollection = client.db("college-feature").collection("users");
 
+    // post a users
+    app.post("/users", async (req, res) => {
+      const user = req.body;
+      const query = { email: user.email };
+      const exist = await usersCollection.findOne(query);
+
+      if (exist) {
+        return res.send({ message: "user already exists" });
+      }
+
+      const result = await usersCollection.insertOne(user);
+      res.send(result);
+    });
+
     //get researches
     app.get("/researches", async (req, res) => {
       const result = await researchCollection.find().toArray();
