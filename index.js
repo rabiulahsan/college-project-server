@@ -33,6 +33,12 @@ async function run() {
     const reviewCollection = client.db("college-feature").collection("reviews");
     const usersCollection = client.db("college-feature").collection("users");
 
+    //get colleges
+    app.get("/users", async (req, res) => {
+      const result = await usersCollection.find().toArray();
+      res.send(result);
+    });
+
     // post a users
     app.post("/users", async (req, res) => {
       const user = req.body;
@@ -44,6 +50,29 @@ async function run() {
       }
 
       const result = await usersCollection.insertOne(user);
+      res.send(result);
+    });
+
+    //update a user
+    app.put("/users/:id", async (req, res) => {
+      const id = req.params.id;
+      const userDetails = req.body;
+
+      console.log(id, user);
+
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updatedUserDetails = {
+        $set: {
+          ...userDetails,
+        },
+      };
+
+      const result = await usersCollection.updateOne(
+        filter,
+        updatedUserDetails,
+        options
+      );
       res.send(result);
     });
 
