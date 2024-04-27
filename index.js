@@ -94,8 +94,19 @@ async function run() {
       res.send(result);
     });
 
+    //get reviews for email
+    app.get("/review", async (req, res) => {
+      const reviewEmail = req.query.email;
+
+      const query = {
+        email: reviewEmail,
+      };
+      const result = await reviewCollection.find(query).toArray();
+      res.send(result);
+    });
+
     // post review
-    app.post("/reviews", async (req, res) => {
+    app.put("/reviews", async (req, res) => {
       const review = req.body;
       const result = await reviewCollection.insertOne(review);
       res.send(result);
