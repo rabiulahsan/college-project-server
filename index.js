@@ -94,6 +94,13 @@ async function run() {
       res.send(result);
     });
 
+    // post review
+    app.post("/reviews", async (req, res) => {
+      const review = req.body;
+      const result = await reviewCollection.insertOne(review);
+      res.send(result);
+    });
+
     //get search results
     //getting search data
     app.get("/search", async (req, res) => {
