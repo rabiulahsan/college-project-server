@@ -105,11 +105,25 @@ async function run() {
       res.send(result);
     });
 
-    // post review
-    app.put("/reviews", async (req, res) => {
+    // POST review
+    app.post("/reviews", async (req, res) => {
       const review = req.body;
-      const result = await reviewCollection.insertOne(review);
-      res.send(result);
+      // Check if the review already exists
+      const existingReview = await reviewCollection.findOne({
+        email: review.email,
+      });
+      if (existingReview) {
+        // If the review exists, update it using PUT
+        const result = await reviewCollection.updateOne(
+          { email: review.email },
+          { $set: review }
+        );
+        res.send(result);
+      } else {
+        // If the review doesn't exist, insert it using POST
+        const result = await reviewCollection.insertOne(review);
+        res.send(result);
+      }
     });
 
     //get search results
